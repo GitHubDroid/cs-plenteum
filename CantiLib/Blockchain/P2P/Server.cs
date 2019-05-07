@@ -43,7 +43,7 @@ namespace Canti.Blockchain.P2P
         public EventHandler OnPeerDisconnected;
 
         // Start server on specified port
-        public void Start(int Port = GlobalsConfig.P2P_DEFAULT_PORT)
+        public void Start(int Port = Globals.P2P_DEFAULT_PORT)
         {
             // Create a new TCP listener and start listening
             try
@@ -151,11 +151,16 @@ namespace Canti.Blockchain.P2P
         }
 
         // Connect to a specified URL
-        public void Connect(Connection Connection)
+        public bool Connect(Connection Connection)
         {
             // Try to connect to peer
             try
             {
+                // Check if connection already exists
+                /*foreach (PeerConnection PeerCheck in GetPeerList())
+                    if (PeerCheck.Address == Connection.Host + ":" + Connection.Port)
+                        throw new Exception();*/
+
                 // Create a connection
                 TcpClient Client = new TcpClient(Connection.Host, Connection.Port);
 
@@ -164,20 +169,26 @@ namespace Canti.Blockchain.P2P
                 Peers.Add(Peer);
 
                 // Log connection to console
-                Logger?.Log(Level.DEBUG, "Peer connection formed with {0}", Peer.Address);
+                Logger?.Log(Level.DEBUG, $"Peer connection formed with {Peer.Address}");
 
                 // Invoke connection event handler
                 OnPeerConnected?.Invoke(Peer, EventArgs.Empty);
+
+                // Return successful
+                return true;
             }
 
             // Unable to connect to peer
-            catch
+            catch (Exception e)
             {
                 // Log error to console
-                Logger?.Log(Level.ERROR, "Peer connection could not be formed with {0}:{1}", Connection.Host, Connection.Port);
+                Logger?.Log(Level.ERROR, $"Peer connection could not be formed with {Connection.Host}:{Connection.Port} - {e.Message}");
 
                 // Raise error event
-                OnError?.Invoke("Unable to connect to peer " + Connection.Host + ":" + Connection.Port, EventArgs.Empty);
+                OnError?.Invoke($"Unable to connect to peer {Connection.Host}:{Connection.Port} - {e.Message}", EventArgs.Empty);
+
+                // Return false since connection failed
+                return false;
             }
         }
 

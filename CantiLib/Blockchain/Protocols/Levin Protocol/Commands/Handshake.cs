@@ -13,7 +13,7 @@ namespace Canti.Blockchain.Commands
     public class Handshake
     {
         // Command ID
-        public const int Id = GlobalsConfig.LEVIN_COMMANDS_BASE + 1;
+        public const int Id = Globals.LEVIN_COMMANDS_BASE + 1;
 
         // Outgoing request structure
         public struct Request : ICommandRequestBase
@@ -127,11 +127,11 @@ namespace Canti.Blockchain.Commands
                 {
                     NodeData = new NodeData
                     {
-                        NetworkId = GlobalsConfig.NETWORK_ID,
+                        NetworkId = Globals.NETWORK_ID,
                         LocalTime = GeneralUtilities.GetTimestamp(),
                         Port = (uint)Context.Server.Port,
                         PeerId = Context.Server.PeerId,
-                        Version = GlobalsConfig.LEVIN_VERSION
+                        Version = 3
                     },
                     PayloadData = new CoreSyncData
                     {

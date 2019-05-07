@@ -3,7 +3,7 @@
 // 
 // Please see the included LICENSE file for more information.
 
-namespace CantiLib.Blockchain.Templates
+namespace Canti.Blockchain.Templates
 {
     public struct TransactionExtra
     {

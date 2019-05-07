@@ -8,7 +8,7 @@ namespace Canti.Blockchain.Commands
     public class Ping
     {
         // Command ID
-        public const int Id = GlobalsConfig.LEVIN_COMMANDS_BASE + 3;
+        public const int Id = Globals.LEVIN_COMMANDS_BASE + 3;
 
         // Outgoing request structure
         public struct Request : ICommandRequestBase

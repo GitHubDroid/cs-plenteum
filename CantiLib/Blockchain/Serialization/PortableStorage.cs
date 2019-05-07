@@ -78,11 +78,11 @@ namespace Canti.Blockchain
             if (IncludeHeader)
             {
                 // Add signatures
-                Output = Encoding.AppendToByteArray(Encoding.IntegerToByteArray(GlobalsConfig.STORAGE_SIGNATUREA), Output);
-                Output = Encoding.AppendToByteArray(Encoding.IntegerToByteArray(GlobalsConfig.STORAGE_SIGNATUREB), Output);
+                Output = Encoding.AppendToByteArray(Encoding.IntegerToByteArray(Globals.STORAGE_SIGNATUREA), Output);
+                Output = Encoding.AppendToByteArray(Encoding.IntegerToByteArray(Globals.STORAGE_SIGNATUREB), Output);
 
                 // Add version number
-                Output = Encoding.AppendToByteArray(GlobalsConfig.STORAGE_FORMAT_VERSION, Output);
+                Output = Encoding.AppendToByteArray(Globals.STORAGE_FORMAT_VERSION, Output);
             }
 
             // Add array length
@@ -109,14 +109,14 @@ namespace Canti.Blockchain
             int Offset = 0;
             if (IncludeHeader)
             {
-                if (Encoding.ByteArrayToInteger<uint>(Data, 0) != GlobalsConfig.STORAGE_SIGNATUREA ||
-                    Encoding.ByteArrayToInteger<uint>(Data, 4) != GlobalsConfig.STORAGE_SIGNATUREB)
+                if (Encoding.ByteArrayToInteger<uint>(Data, 0) != Globals.STORAGE_SIGNATUREA ||
+                    Encoding.ByteArrayToInteger<uint>(Data, 4) != Globals.STORAGE_SIGNATUREB)
                     throw new Exception(string.Format("Signature mismatch, expected {0}{1}, got {2}{3}",
-                        GlobalsConfig.STORAGE_SIGNATUREA, GlobalsConfig.STORAGE_SIGNATUREB,
+                        Globals.STORAGE_SIGNATUREA, Globals.STORAGE_SIGNATUREB,
                         Encoding.ByteArrayToInteger<uint>(Data, 0), Encoding.ByteArrayToInteger<uint>(Data, 4)));
-                else if (Data[8] != GlobalsConfig.STORAGE_FORMAT_VERSION)
+                else if (Data[8] != Globals.STORAGE_FORMAT_VERSION)
                     throw new Exception(string.Format("Version mismatch, expected {0}, got {1}",
-                        GlobalsConfig.STORAGE_FORMAT_VERSION, Data[8]));
+                        Globals.STORAGE_FORMAT_VERSION, Data[8]));
                 Offset = 9;
             }
 
@@ -208,7 +208,7 @@ namespace Canti.Blockchain
         }
 
         // Gets an object's serialization type
-        private SerializationType GetType(object Value)
+        public static SerializationType GetType(object Value)
         {
             // Get serialization type
             SerializationType Type;
@@ -228,13 +228,13 @@ namespace Canti.Blockchain
             else Type = SerializationType.OBJECT;
             return Type;
         }
-        private SerializationType GetType(byte[] Value)
+        public static SerializationType GetType(byte[] Value)
         {
             // Get serialization type
             byte Type = Encoding.ByteArrayToInteger<byte>(Value, 0);
             return (SerializationType)Type;
         }
-        private Type ConvertSerializationType(SerializationType Type)
+        public static Type ConvertSerializationType(SerializationType Type)
         {
             if (Type == SerializationType.ULONG) return typeof(ulong);
             else if (Type == SerializationType.LONG) return typeof(long);
@@ -253,7 +253,7 @@ namespace Canti.Blockchain
         }
 
         // Serializes an object to a byte array
-        private byte[] SerializeObject(object Value, bool IncludeType = true)
+        public static byte[] SerializeObject(object Value, bool IncludeType = true)
         {
             // Create an output array
             byte[] Output = new byte[0];
@@ -350,7 +350,7 @@ namespace Canti.Blockchain
         }
 
         // Serializes a variable int to a byte array
-        private byte[] SerializeVarInt<T>(T Value) where T : IConvertible
+        public static byte[] SerializeVarInt<T>(T Value) where T : IConvertible
         {
             // Create an output buffer
             byte[] Output = new byte[0];
@@ -411,7 +411,7 @@ namespace Canti.Blockchain
         }
 
         // Deserializes a variable int from a byte array, and returns a new offset value
-        private T DeserializeVarInt<T>(byte[] Data, int Offset, out int NewOffset) where T : IConvertible
+        public static T DeserializeVarInt<T>(byte[] Data, int Offset, out int NewOffset) where T : IConvertible
         {
             // Get byte size
             int SizeMask = Data[Offset] & PORTABLE_RAW_SIZE_MARK_MASK;
@@ -440,7 +440,7 @@ namespace Canti.Blockchain
         }
 
         // Serializes an array to a byte array
-        private byte[] SerializeArray(Array Value)
+        public static byte[] SerializeArray(Array Value)
         {
             // Create an output array
             byte[] Output = new byte[0];
@@ -463,7 +463,7 @@ namespace Canti.Blockchain
         }
 
         // Serializes an entry to a byte array
-        private byte[] SerializeEntry(string Name, object Value)
+        public static byte[] SerializeEntry(string Name, object Value)
         {
             // Serialize name
             byte[] NameLength = new byte[] { (byte)Name.Length };
@@ -478,10 +478,13 @@ namespace Canti.Blockchain
         }
 
         // Serializes an object to a byte array
-        private byte[] SerializeObjectAsBinary(object Value)
+        public static byte[] SerializeObjectAsBinary(object Value)
         {
             // Create an output array
             byte[] Output = new byte[0];
+
+            // Check if null
+            if (Value == null) return Output;
 
             // Object is an integer
             if (Value.GetType().GetInterfaces().Contains(typeof(IConvertible)))
@@ -530,7 +533,7 @@ namespace Canti.Blockchain
         }
 
         // Serializes an array to a byte array
-        private byte[] SerializeArrayAsBinary(Array Value)
+        public static byte[] SerializeArrayAsBinary(Array Value)
         {
             // Verify array is valid
             if (Value == null) return new byte[0];
@@ -554,7 +557,7 @@ namespace Canti.Blockchain
         }
 
         // Decodes an object packed into a byte array
-        private T DeserializeObjectFromBinary<T>(byte[] Data)
+        public static T DeserializeObjectFromBinary<T>(byte[] Data)
         {
             // Create an output object
             T Output = default(T);
@@ -626,7 +629,7 @@ namespace Canti.Blockchain
         }
 
         // Deserializes an array packed into a byte array
-        public T[] DeserializeArrayFromBinary<T>(byte[] Data)
+        public static T[] DeserializeArrayFromBinary<T>(byte[] Data)
         {
             // Create a list of objects
             List<T> Output = new List<T>();

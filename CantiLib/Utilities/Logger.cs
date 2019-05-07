@@ -59,7 +59,27 @@ namespace Canti.Utilities
                         if (LogLevel >= Entry.Level)
                         {
                             string Output = string.Format("{0} [{1}] {2}", Entry.Timestamp.ToShortTimeString(), Entry.Level, Entry.Content);
-                            Console.WriteLine(Output);
+                            switch (Entry.Level)
+                            {
+                                case Level.DEBUG:
+                                    Write(Output, ConsoleColor.Gray);
+                                    break;
+                                case Level.INFO:
+                                    Write(Output, ConsoleColor.Green);
+                                    break;
+                                case Level.WARNING:
+                                    Write(Output, ConsoleColor.Yellow);
+                                    break;
+                                case Level.ERROR:
+                                    Write(Output, ConsoleColor.Red);
+                                    break;
+                                case Level.FATAL:
+                                    Write(Output, ConsoleColor.DarkRed);
+                                    break;
+                                default:
+                                    Console.WriteLine(Output);
+                                    break;
+                            }
                             if (LogFile != null) File.AppendAllText(LogFile, Output + Environment.NewLine);
                         }
                     }
@@ -77,6 +97,13 @@ namespace Canti.Utilities
         public void Log(Level Level, string Content, params object[] Params)
         {
             Entries.Enqueue(new Entry(DateTime.Now.ToUniversalTime(), Level, string.Format(Content, Params)));
+        }
+
+        private void Write(string Content, ConsoleColor Color)
+        {
+            Console.ForegroundColor = Color;
+            Console.WriteLine(Content);
+            Console.ResetColor();
         }
     }
 }

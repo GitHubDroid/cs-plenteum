@@ -30,8 +30,8 @@ namespace CLIWallet
         /* Writes out the coin name, version, and wallet name */
         private static void StartupMsg()
         {
-            YellowMsg.WriteLine($"{Globals.coinName} {Globals.version} "
-                              + $"{Globals.CLIWalletName}");
+            YellowMsg.WriteLine($"{Globals.COIN_NAME} {Globals.VERSION} "
+                              + $"{Globals.CLI_WALLET_NAME}");
         }
     }
 }

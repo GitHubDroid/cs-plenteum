@@ -9,10 +9,10 @@ using System;
 
 namespace Canti.Blockchain.Commands
 {
-    class TimedSync
+    public class TimedSync
     {
         // Command ID
-        public const int Id = GlobalsConfig.LEVIN_COMMANDS_BASE + 2;
+        public const int Id = Globals.LEVIN_COMMANDS_BASE + 2;
 
         // Outgoing request structure
         public struct Request : ICommandRequestBase

@@ -5,22 +5,19 @@
 
 using Canti.Blockchain.Crypto;
 using Canti.Utilities;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Canti.Blockchain.Commands
 {
-    public class RequestTxPool
+    public class RequestChain
     {
         // Command ID
-        public const int Id = Globals.CRYPTONOTE_COMMANDS_BASE + 8;
+        public const int Id = Globals.CRYPTONOTE_COMMANDS_BASE + 6;
 
         // Outgoing request structure
         public struct Request : ICommandRequestBase
         {
             // Variables
-            public string[] Txs;
+            public string[] BlockIds;
 
             // Serializes request data into a byte array
             public byte[] Serialize()
@@ -29,7 +26,7 @@ namespace Canti.Blockchain.Commands
                 PortableStorage Storage = new PortableStorage();
 
                 // Add entries
-                Storage.AddEntryAsBinary("txs", Txs);
+                Storage.AddEntryAsBinary("block_ids", BlockIds);
 
                 // Return serialized byte array
                 return Storage.Serialize();
@@ -45,7 +42,7 @@ namespace Canti.Blockchain.Commands
                 // Populate and return new response
                 return new Request
                 {
-                    Txs = Hashing.DeserializeHashArray((string)Storage.GetEntry("txs"))
+                    BlockIds = Hashing.DeserializeHashArray((string)Storage.GetEntry("block_ids"))
                 };
             }
         }
@@ -60,11 +57,11 @@ namespace Canti.Blockchain.Commands
                 Request Request = Request.Deserialize(Command.Data);
 
                 // debug
-                Context.Logger?.Log(Level.DEBUG, "[IN] Received \"Request TX Pool\" Request:");
+                Context.Logger?.Log(Level.DEBUG, "[IN] Received \"Notify Request Chain\" Request:");
                 Context.Logger?.Log(Level.DEBUG, "- Response Requested: {0}", !Command.IsNotification);
-                Context.Logger?.Log(Level.DEBUG, "- TXs:");
-                for (int i = 0; i < Request.Txs.Length; i++)
-                    Context.Logger?.Log(Level.DEBUG, "  - [{0}]: {1}", i, Request.Txs[i]);
+                Context.Logger?.Log(Level.DEBUG, "- Block IDs:");
+                for (int i = 0; i < Request.BlockIds.Length; i++)
+                    Context.Logger?.Log(Level.DEBUG, "  - [{0}]: {1}", i, Request.BlockIds[i]);
 
                 // TODO: Do something with request data
             }

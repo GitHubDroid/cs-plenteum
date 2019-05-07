@@ -6,8 +6,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Google.Protobuf" Version="3.6.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
+    <PackageReference Include="Google.Protobuf" Version="3.6.1" />
+    <PackageReference Include="Microsoft.Data.Sqlite.Core" Version="2.2.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
+    <PackageReference Include="SQLitePCLRaw.bundle_green" Version="1.1.12" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Blockchain\Local Storage\WalletStorage\" />
   </ItemGroup>
 
 </Project>

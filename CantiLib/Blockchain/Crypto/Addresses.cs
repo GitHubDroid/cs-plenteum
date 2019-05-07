@@ -37,7 +37,7 @@ namespace Canti.Blockchain.Crypto
         {
             /* Specify the address prefix in the input for easier testing */
             return AddressFromKeys(publicSpendKey, publicViewKey,
-                                   Globals.addressPrefix);
+                                   Globals.ADDRESS_PREFIX);
         }
 
         public static string AddressFromKeys(PrivateKey privateSpendKey,
@@ -117,7 +117,7 @@ namespace Canti.Blockchain.Crypto
         public static IEither<Error, PublicKeys>
                       KeysFromAddress(string address)
         {
-            return KeysFromAddress(address, Globals.addressPrefix);
+            return KeysFromAddress(address, Globals.ADDRESS_PREFIX);
         }
 
         public static IEither<Error, PublicKeys>

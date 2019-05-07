@@ -3,10 +3,12 @@
 // 
 // Please see the included LICENSE file for more information.
 
+using System.Collections.Generic;
+
 namespace Canti.Blockchain
 {
     // Interface for handling database connections and storage
-    public interface IDatabase
+    public interface IStorage
     {
         // Storing
         void StoreBlock(Block Block);

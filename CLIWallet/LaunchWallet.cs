@@ -70,7 +70,7 @@ namespace CLIWallet
         {
             while (true)
             {
-                YellowMsg.Write($"Public {Globals.ticker} address: ");
+                YellowMsg.Write($"Public {Globals.TICKER} address: ");
 
                 string input = Console.ReadLine();
 

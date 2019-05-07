@@ -23,8 +23,11 @@ namespace Canti.Blockchain
         private Dictionary<PeerConnection, LevinPeer> Peers = new Dictionary<PeerConnection, LevinPeer>();
 
         // Entry point
-        public LevinProtocol(Server Connection)
+        public LevinProtocol(Server Connection, string NetworkId)
         {
+            // Set global network ID
+            Globals.NETWORK_ID = NetworkId;
+
             // Set connection
             Server = Connection;
 
@@ -69,16 +72,16 @@ namespace Canti.Blockchain
                 Logger?.Log(Level.DEBUG, " - Protocol Version: {0}", Peers[Packet.Peer].Header.ProtocolVersion);*/
 
                 // Check that signature matches
-                if (Peer.Header.Signature != GlobalsConfig.LEVIN_SIGNATURE)
+                if (Peer.Header.Signature != Globals.LEVIN_SIGNATURE)
                 {
-                    Logger?.Log(Level.DEBUG, "Incoming packet signature mismatch, expected {0}, received {1}", GlobalsConfig.LEVIN_SIGNATURE, Peers[Packet.Peer].Header.Signature);
+                    Logger?.Log(Level.DEBUG, "Incoming packet signature mismatch, expected {0}, received {1}", Globals.LEVIN_SIGNATURE, Peers[Packet.Peer].Header.Signature);
                     return;
                 }
 
                 // Check packet size
-                if (Peer.Header.PayloadSize > GlobalsConfig.LEVIN_MAX_PACKET_SIZE)
+                if (Peer.Header.PayloadSize > Globals.LEVIN_MAX_PACKET_SIZE)
                 {
-                    Logger?.Log(Level.DEBUG, "Incoming packet size is too big, max size is {0}, received {1}", GlobalsConfig.LEVIN_MAX_PACKET_SIZE, Packet.Data.Length);
+                    Logger?.Log(Level.DEBUG, "Incoming packet size is too big, max size is {0}, received {1}", Globals.LEVIN_MAX_PACKET_SIZE, Packet.Data.Length);
                     return;
                 }
 
@@ -113,25 +116,20 @@ namespace Canti.Blockchain
 
                 // Check if peer requires a handshake
                 if (Command.CommandCode == Commands.Handshake.Id) Commands.Handshake.Invoke(this, Peer, Command); // 1001
-                else if (Peer.State == PeerState.Verified)
-                {
-                    // Invoke other commands
-                    if (Command.CommandCode == Commands.Ping.Id) Commands.Ping.Invoke(this, Peer, Command); // 1002
-                    else if (Command.CommandCode == Commands.TimedSync.Id) Commands.TimedSync.Invoke(this, Peer, Command); // 1003
-                    else if (Command.CommandCode == Commands.NotifyRequestChain.Id) Commands.NotifyRequestChain.Invoke(this, Peer, Command); // 2006
-                    else if (Command.CommandCode == Commands.RequestTxPool.Id) Commands.RequestTxPool.Invoke(this, Peer, Command); // 2008
-                }
+                else if (Command.CommandCode == Commands.Ping.Id) Commands.Ping.Invoke(this, Peer, Command); // 1002
+                else if (Command.CommandCode == Commands.TimedSync.Id) Commands.TimedSync.Invoke(this, Peer, Command); // 1003
+                else if (Command.CommandCode == Commands.RequestPeerId.Id) Commands.RequestPeerId.Invoke(this, Peer, Command); // 1006
+                else if (Command.CommandCode == Commands.RequestChain.Id) Commands.RequestChain.Invoke(this, Peer, Command); // 2006
+                else if (Command.CommandCode == Commands.RequestChainEntry.Id) Commands.RequestChainEntry.Invoke(this, Peer, Command); // 2007
+                else if (Command.CommandCode == Commands.RequestTxPool.Id) Commands.RequestTxPool.Invoke(this, Peer, Command); // 2008
 
                 // Debug
-                else if (Peer.State == PeerState.Unverified)
-                {
-                    Logger?.Log(Level.DEBUG, "[IN] Received command:");
-                    Logger?.Log(Level.DEBUG, " - Command Code: {0}", Command.CommandCode);
-                    Logger?.Log(Level.DEBUG, " - Is Notification: {0}", Command.IsNotification);
-                    Logger?.Log(Level.DEBUG, " - Is Response: {0}", Command.IsResponse);
-                    Logger?.Log(Level.DEBUG, " - Data: {0} Bytes", Command.Data.Length);
-                    Logger?.Log(Level.DEBUG, Encoding.ByteArrayToHexString(Command.Data));
-                }
+                Logger?.Log(Level.DEBUG, "[IN] Received command:");
+                Logger?.Log(Level.DEBUG, " - Command Code: {0}", Command.CommandCode);
+                Logger?.Log(Level.DEBUG, " - Is Notification: {0}", Command.IsNotification);
+                Logger?.Log(Level.DEBUG, " - Is Response: {0}", Command.IsResponse);
+                Logger?.Log(Level.DEBUG, " - Data: {0} Bytes", Command.Data.Length);
+                Logger?.Log(Level.DEBUG, Encoding.ByteArrayToHexString(Command.Data));
 
                 // Set new read status and clear previous request
                 Peer.ReadStatus = PacketReadStatus.Head;
@@ -147,7 +145,7 @@ namespace Canti.Blockchain
             PeerConnection Peer = (PeerConnection)sender;
 
             // Add peer to peer list
-            Peers.Add(Peer, new LevinPeer(Peer));
+            if (Peer != null) Peers.Add(Peer, new LevinPeer(Peer));
         }
 
         // Peer disconnected
@@ -166,7 +164,7 @@ namespace Canti.Blockchain
             // Form message header
             BucketHead2 Header = new BucketHead2
             {
-                Signature =         GlobalsConfig.LEVIN_SIGNATURE,
+                Signature =         Globals.LEVIN_SIGNATURE,
                 ResponseRequired =  false,
                 PayloadSize =       (ulong)Data.Length,
                 CommandCode =       (uint)CommandCode,
@@ -188,11 +186,11 @@ namespace Canti.Blockchain
             // Form message header
             BucketHead2 Header = new BucketHead2
             {
-                Signature =         GlobalsConfig.LEVIN_SIGNATURE,
+                Signature =         Globals.LEVIN_SIGNATURE,
                 ResponseRequired =  false,
                 PayloadSize =       (ulong)Data.Length,
                 CommandCode =       (uint)CommandCode,
-                ProtocolVersion =   GlobalsConfig.LEVIN_VERSION,
+                ProtocolVersion =   Globals.LEVIN_VERSION,
                 Flags =             LEVIN_PACKET_REQUEST
             };
 
@@ -209,11 +207,11 @@ namespace Canti.Blockchain
             // Form message header
             BucketHead2 Header = new BucketHead2
             {
-                Signature         = GlobalsConfig.LEVIN_SIGNATURE,
+                Signature         = Globals.LEVIN_SIGNATURE,
                 ResponseRequired  = ResponseRequired,
                 PayloadSize       = (ulong)Data.Length,
                 CommandCode       = (uint)CommandCode,
-                ProtocolVersion   = GlobalsConfig.LEVIN_VERSION,
+                ProtocolVersion   = Globals.LEVIN_VERSION,
                 Flags             = LEVIN_PACKET_RESPONSE,
                 ReturnCode        = RequestSuccessul? LEVIN_RETCODE_SUCCESS : LEVIN_RETCODE_FAILURE
             };

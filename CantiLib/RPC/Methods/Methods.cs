@@ -38,12 +38,12 @@ namespace Canti.Blockchain.RPC
             foreach (KeyValuePair<string, object> Param in Params)
             {
                 ParamCount++;
-                Output += "\"" + Param.Key + "\":" + Serialization.SerializeObjectToJson(Param.Value);
+                Output += "\"" + Param.Key + "\":" + JsonSerialization.SerializeObjectToJson(Param.Value);
                 if (ParamCount < Params.Count) Output += ",";
             }
             Output += "}";
             foreach (KeyValuePair<string, object> Param in ExternalParams)
-                Output += ",\"" + Param.Key + "\":" + Serialization.SerializeObjectToJson(Param.Value);
+                Output += ",\"" + Param.Key + "\":" + JsonSerialization.SerializeObjectToJson(Param.Value);
             Output += "}";
             return Output;
         }

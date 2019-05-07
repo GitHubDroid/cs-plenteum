@@ -3,6 +3,9 @@
 // 
 // Please see the included LICENSE file for more information.
 
+using System;
+using System.Net.Sockets;
+
 namespace Canti.Utilities
 {
     public class Connection
@@ -23,6 +26,11 @@ namespace Canti.Utilities
             string Output = "http://" + Host + ":" + Port + "/";
             if (!IgnoreEndpoint) Output += Endpoint;
             return Output;
+        }
+        public bool TestConnection()
+        {
+            try { using (var client = new TcpClient(Host, Port)) return true; }
+            catch (Exception) { return false; }
         }
     }
 }

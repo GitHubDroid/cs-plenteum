@@ -68,7 +68,7 @@ namespace CLIWallet
             /* Trim to 20 chars */
             walletName = string.Concat(walletName.Take(promptLength));
 
-            return $"[{Globals.ticker} {walletName}]: ";
+            return $"[{Globals.TICKER} {walletName}]: ";
         }
 
         public static (bool exit, WalletBackend wallet) SelectionScreen()

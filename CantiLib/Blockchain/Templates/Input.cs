@@ -3,8 +3,11 @@
 // 
 // Please see the included LICENSE file for more information.
 
+using System;
+
 namespace Canti.Blockchain
 {
+    [Serializable]
     public struct Input
     {
         public uint Amount { get; set; }

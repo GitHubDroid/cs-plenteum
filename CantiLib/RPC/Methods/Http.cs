@@ -23,7 +23,7 @@ namespace Canti.Blockchain.RPC
         public static (bool Success, string Error, UInt32 Height, UInt32 NetworkHeight, string Status) GetHeight(Connection Daemon)
         {
             string Result = ReadEndpoint(Daemon.ToString(true), "getheight");
-            HttpRequestResult Output = Serialization.DeserializeObjectFromJson<HttpRequestResult>(Result);
+            HttpRequestResult Output = JsonSerialization.DeserializeObjectFromJson<HttpRequestResult>(Result);
             return (Success: true, Error: null, Height: Output.height, Output.network_height, Output.status);
         }
 

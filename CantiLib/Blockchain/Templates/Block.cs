@@ -3,17 +3,25 @@
 // 
 // Please see the included LICENSE file for more information.
 
+using System;
+
 namespace Canti.Blockchain
 {
     // Block template
+    [Serializable]
     public struct Block
     {
         // Block header
-        public byte MajorVersion { get; set; }
-        public byte MinorVersion { get; set; }
-        public ulong Timestamp { get; set; }
-        public string PreviousBlockHash { get; set; }
-        public uint Nonce { get; set; }
+        [Serializable]
+        public struct BlockHeader
+        {
+            public byte MajorVersion { get; set; }
+            public byte MinorVersion { get; set; }
+            public uint Nonce { get; set; }
+            public ulong Timestamp { get; set; }
+            public string PreviousBlockHash { get; set; }
+        }
+        public BlockHeader Header { get; set; }
 
         // Block data
         public bool IsAlternative { get; set; }
@@ -30,5 +38,12 @@ namespace Canti.Blockchain
         public double Penalty { get; set; }
         public ulong TotalFeeAmount { get; set; }
         public Transaction[] Transactions { get; set; }
+
+        public string[] TransactionHashes { get; set; }
+
+        public Transaction BaseTransaction { get; set; }
+        public uint TransactionCount { get; set; }
+        public string[] BaseTransactionBranch { get; set; }
+        public string[] BlockChainBranch { get; set; }
     }
 }

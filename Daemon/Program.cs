@@ -3,19 +3,16 @@
 // 
 // Please see the included LICENSE file for more information.
 
-using Canti.Utilities;
-using Canti.Data;
-using Canti.Blockchain.P2P;
-using System;
-using System.Collections.Generic;
 using Canti.Blockchain;
-using Canti.Blockchain.Commands;
 
 namespace Daemon
 {
     class Program
     {
-        static int Port = Daemon.P2pPort;
+        // Set port to global default
+        static int Port = Globals.P2P_DEFAULT_PORT;
+
+        // Application entry point
         static void Main(string[] args)
         {
             // Parse commandline arguments

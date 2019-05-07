@@ -3,9 +3,12 @@
 // 
 // Please see the included LICENSE file for more information.
 
+using System;
+
 namespace Canti.Blockchain
 {
     // Transaction template
+    [Serializable]
     public struct Transaction
     {
         public string Hash { get; set; }
@@ -21,9 +24,16 @@ namespace Canti.Blockchain
         public bool InBlockchain { get; set; }
         public string BlockHash { get; set; }
         public uint BlockIndex { get; set; }
+
+        public byte[] Extra { get; set; }
         // public TransactionExtra Extra { get; set; }
         public string[] Signatures { get; set; }
         public Input[] Inputs { get; set; }
         public Output[] Outputs { get; set; }
+        /*byte version;
+        ulong unlockTime;
+        Input[] inputs;
+        Output[] outputs;
+        byte[] extra;*/
     }
 }

@@ -18,7 +18,7 @@ namespace Canti.Blockchain.RPC
             MethodBuilder Method = new MethodBuilder("reset", Wallet.Password);
             if (!String.IsNullOrEmpty(ViewSecretKey)) Method.AddParam("viewSecretKey", ViewSecretKey);
             string Result = SendRequest(Wallet.ToString(), Method.ToString());
-            RequestResult Output = Serialization.DeserializeObjectFromJson<RequestResult>(Result);
+            RequestResult Output = JsonSerialization.DeserializeObjectFromJson<RequestResult>(Result);
             if (Output.error != null)
             {
                 return (Success: false, Error: Output.error.message);
@@ -30,7 +30,7 @@ namespace Canti.Blockchain.RPC
         {
             MethodBuilder Method = new MethodBuilder("save", Wallet.Password);
             string Result = SendRequest(Wallet.ToString(), Method.ToString());
-            RequestResult Output = Serialization.DeserializeObjectFromJson<RequestResult>(Result);
+            RequestResult Output = JsonSerialization.DeserializeObjectFromJson<RequestResult>(Result);
             if (Output.error != null) return (Success: false, Error: Output.error.message);
             else return (Success: true, Error: null);
         }
@@ -39,7 +39,7 @@ namespace Canti.Blockchain.RPC
         {
             MethodBuilder Method = new MethodBuilder("getViewKey", Wallet.Password);
             string Result = SendRequest(Wallet.ToString(), Method.ToString());
-            RequestResult Output = Serialization.DeserializeObjectFromJson<RequestResult>(Result);
+            RequestResult Output = JsonSerialization.DeserializeObjectFromJson<RequestResult>(Result);
             if (Output.error != null) return (Success: false, Error: Output.error.message, ViewKey: null);
             else return (Success: true, Error: null, ViewKey: Output.result.viewSecretKey);
         }
@@ -49,7 +49,7 @@ namespace Canti.Blockchain.RPC
             MethodBuilder Method = new MethodBuilder("getSpendKeys", Wallet.Password);
             Method.AddParam("address", Address);
             string Result = SendRequest(Wallet.ToString(), Method.ToString());
-            RequestResult Output = Serialization.DeserializeObjectFromJson<RequestResult>(Result);
+            RequestResult Output = JsonSerialization.DeserializeObjectFromJson<RequestResult>(Result);
             if (Output.error != null) return (Success: false, Error: Output.error.message, SecretKey: null, PublicKey: null);
             else return (Success: true, Error: null, SecretKey: Output.result.spendSecretKey, PublicKey: Output.result.spendPublicKey);
         }
@@ -58,7 +58,7 @@ namespace Canti.Blockchain.RPC
         {
             MethodBuilder Method = new MethodBuilder("getStatus", Wallet.Password);
             string Result = SendRequest(Wallet.ToString(), Method.ToString());
-            RequestResult Output = Serialization.DeserializeObjectFromJson<RequestResult>(Result);
+            RequestResult Output = JsonSerialization.DeserializeObjectFromJson<RequestResult>(Result);
             if (Output.error != null) return (Success: false, Error: Output.error.message, BlockCount: 0, KnownBlockCount: 0, LastBlockHash: null, PeerCount: 0);
             else return (Success: true, Error: null, BlockCount: Output.result.blockCount, KnownBlockCount: Output.result.knownBlockCount, Output.result.lastBlockHash, Output.result.peerCount);
         }
@@ -67,7 +67,7 @@ namespace Canti.Blockchain.RPC
         {
             MethodBuilder Method = new MethodBuilder("getAddresses", Wallet.Password);
             string Result = SendRequest(Wallet.ToString(), Method.ToString());
-            RequestResult Output = Serialization.DeserializeObjectFromJson<RequestResult>(Result);
+            RequestResult Output = JsonSerialization.DeserializeObjectFromJson<RequestResult>(Result);
             if (Output.error != null) return (Success: false, Error: Output.error.message, Addresses: null);
             else return (Success: true, Error: null, Addresses: Output.result.addresses);
         }
@@ -78,7 +78,7 @@ namespace Canti.Blockchain.RPC
             if (!String.IsNullOrEmpty(SecretSpendKey)) Method.AddParam("secretSpendKey", SecretSpendKey);
             if (!String.IsNullOrEmpty(PublicSpendKey)) Method.AddParam("publicSpendKey", PublicSpendKey);
             string Result = SendRequest(Wallet.ToString(), Method.ToString());
-            RequestResult Output = Serialization.DeserializeObjectFromJson<RequestResult>(Result);
+            RequestResult Output = JsonSerialization.DeserializeObjectFromJson<RequestResult>(Result);
             if (Output.error != null) return (Success: false, Error: Output.error.message, Address: null);
             else return (Success: true, Error: null, Address: Output.result.address);
         }
@@ -88,7 +88,7 @@ namespace Canti.Blockchain.RPC
             MethodBuilder Method = new MethodBuilder("deleteAddress", Wallet.Password);
             Method.AddParam("address", Address);
             string Result = SendRequest(Wallet.ToString(), Method.ToString());
-            RequestResult Output = Serialization.DeserializeObjectFromJson<RequestResult>(Result);
+            RequestResult Output = JsonSerialization.DeserializeObjectFromJson<RequestResult>(Result);
             if (Output.error != null) return (Success: false, Error: Output.error.message);
             else return (Success: true, Error: null);
         }
@@ -98,7 +98,7 @@ namespace Canti.Blockchain.RPC
             MethodBuilder Method = new MethodBuilder("getBalance", Wallet.Password);
             if (!String.IsNullOrEmpty(Address)) Method.AddParam("address", Address);
             string Result = SendRequest(Wallet.ToString(), Method.ToString());
-            RequestResult Output = Serialization.DeserializeObjectFromJson<RequestResult>(Result);
+            RequestResult Output = JsonSerialization.DeserializeObjectFromJson<RequestResult>(Result);
             if (Output.error != null) return (Success: false, Error: Output.error.message, AvailableBalance: 0, LockedAmount: 0);
             else return (Success: true, Error: null, AvailableBalance: Output.result.availableBalance, LockedAmount: Output.result.lockedAmount);
         }
@@ -109,7 +109,7 @@ namespace Canti.Blockchain.RPC
             Method.AddParam("firstBlockIndex", FirstBlockIndex);
             Method.AddParam("blockCount", BlockCount);
             string Result = SendRequest(Wallet.ToString(), Method.ToString());
-            RequestResult Output = Serialization.DeserializeObjectFromJson<RequestResult>(Result);
+            RequestResult Output = JsonSerialization.DeserializeObjectFromJson<RequestResult>(Result);
             if (Output.error != null) return (Success: false, Error: Output.error.message, BlockHashes: null);
             else return (Success: true, Error: null, BlockHashes: Output.result.blockHashes);
         }
@@ -123,7 +123,7 @@ namespace Canti.Blockchain.RPC
             Method.AddParam("blockCount", BlockCount);
             if (!String.IsNullOrEmpty(PaymentId)) Method.AddParam("paymentId", PaymentId);
             string Result = SendRequest(Wallet.ToString(), Method.ToString());
-            RequestResult Output = Serialization.DeserializeObjectFromJson<RequestResult>(Result);
+            RequestResult Output = JsonSerialization.DeserializeObjectFromJson<RequestResult>(Result);
             if (Output.error != null) return (Success: false, Error: Output.error.message, Items: null);
             else
             {
@@ -143,7 +143,7 @@ namespace Canti.Blockchain.RPC
             if (BlockCount > 0) Method.AddParam("blockCount", BlockCount);
             if (!String.IsNullOrEmpty(PaymentId)) Method.AddParam("paymentId", PaymentId);
             string Result = SendRequest(Wallet.ToString(), Method.ToString());
-            RequestResult Output = Serialization.DeserializeObjectFromJson<RequestResult>(Result);
+            RequestResult Output = JsonSerialization.DeserializeObjectFromJson<RequestResult>(Result);
             if (Output.error != null) return (Success: false, Error: Output.error.message, Items: null);
             else
             {
@@ -169,7 +169,7 @@ namespace Canti.Blockchain.RPC
             MethodBuilder Method = new MethodBuilder("getUnconfirmedTransactionHashes", Wallet.Password);
             if (Addresses != null) Method.AddParam("addresses", Addresses);
             string Result = SendRequest(Wallet.ToString(), Method.ToString());
-            RequestResult Output = Serialization.DeserializeObjectFromJson<RequestResult>(Result);
+            RequestResult Output = JsonSerialization.DeserializeObjectFromJson<RequestResult>(Result);
             if (Output.error != null) return (Success: false, Error: Output.error.message, TransactionHashes: null);
             else return (Success: true, Error: null, TransactionHashes: Output.result.transactionHashes);
         }
@@ -179,7 +179,7 @@ namespace Canti.Blockchain.RPC
             MethodBuilder Method = new MethodBuilder("getTransaction", Wallet.Password);
             Method.AddParam("transactionHash", TransactionHash);
             string Result = SendRequest(Wallet.ToString(), Method.ToString());
-            RequestResult Output = Serialization.DeserializeObjectFromJson<RequestResult>(Result);
+            RequestResult Output = JsonSerialization.DeserializeObjectFromJson<RequestResult>(Result);
             if (Output.error != null) return (Success: false, Error: Output.error.message, TransactionHash: null, BlockIndex: 0, Timestamp: 0, IsBase: false, UnlockTime: 0, Amount: 0, Fee: 0, Extra: null, PaymentId: null, Transfers: null);
             else
             {
@@ -202,7 +202,7 @@ namespace Canti.Blockchain.RPC
             if (!String.IsNullOrEmpty(PaymentId)) Method.AddParam("paymentId", PaymentId);
             if (!String.IsNullOrEmpty(ChangeAddress)) Method.AddParam("changeAddress", ChangeAddress);
             string Result = SendRequest(Wallet.ToString(), Method.ToString());
-            RequestResult Output = Serialization.DeserializeObjectFromJson<RequestResult>(Result);
+            RequestResult Output = JsonSerialization.DeserializeObjectFromJson<RequestResult>(Result);
             if (Output.error != null) return (Success: false, Error: Output.error.message, TransactionHash: null);
             else return (Success: true, Error: null, TransactionHash: Output.result.transactionHash);
         }
@@ -219,7 +219,7 @@ namespace Canti.Blockchain.RPC
             if (!String.IsNullOrEmpty(PaymentId)) Method.AddParam("paymentId", PaymentId);
             if (!String.IsNullOrEmpty(ChangeAddress)) Method.AddParam("changeAddress", ChangeAddress);
             string Result = SendRequest(Wallet.ToString(), Method.ToString());
-            RequestResult Output = Serialization.DeserializeObjectFromJson<RequestResult>(Result);
+            RequestResult Output = JsonSerialization.DeserializeObjectFromJson<RequestResult>(Result);
             if (Output.error != null) return (Success: false, Error: Output.error.message, TransactionHash: null);
             else return (Success: true, Error: null, TransactionHash: Output.result.transactionHash);
         }
@@ -228,7 +228,7 @@ namespace Canti.Blockchain.RPC
         {
             MethodBuilder Method = new MethodBuilder("getDelayedTransactionHashes", Wallet.Password);
             string Result = SendRequest(Wallet.ToString(), Method.ToString());
-            RequestResult Output = Serialization.DeserializeObjectFromJson<RequestResult>(Result);
+            RequestResult Output = JsonSerialization.DeserializeObjectFromJson<RequestResult>(Result);
             if (Output.error != null) return (Success: false, Error: Output.error.message, TransactionHashes: null);
             else return (Success: true, Error: null, TransactionHashes: Output.result.transactionHashes);
         }
@@ -238,7 +238,7 @@ namespace Canti.Blockchain.RPC
             MethodBuilder Method = new MethodBuilder("deleteDelayedTransaction", Wallet.Password);
             Method.AddParam("transactionHash", TransactionHash);
             string Result = SendRequest(Wallet.ToString(), Method.ToString());
-            RequestResult Output = Serialization.DeserializeObjectFromJson<RequestResult>(Result);
+            RequestResult Output = JsonSerialization.DeserializeObjectFromJson<RequestResult>(Result);
             if (Output.error != null) return (Success: false, Error: Output.error.message);
             else return (Success: true, Error: null);
         }
@@ -248,7 +248,7 @@ namespace Canti.Blockchain.RPC
             MethodBuilder Method = new MethodBuilder("sendDelayedTransaction", Wallet.Password);
             Method.AddParam("transactionHash", TransactionHash);
             string Result = SendRequest(Wallet.ToString(), Method.ToString());
-            RequestResult Output = Serialization.DeserializeObjectFromJson<RequestResult>(Result);
+            RequestResult Output = JsonSerialization.DeserializeObjectFromJson<RequestResult>(Result);
             if (Output.error != null) return (Success: false, Error: Output.error.message);
             else return (Success: true, Error: null);
         }
@@ -261,7 +261,7 @@ namespace Canti.Blockchain.RPC
             if (Addresses != null) Method.AddParam("addresses", Addresses);
             if (!String.IsNullOrEmpty(DestinationAddress)) Method.AddParam("destinationAddress", DestinationAddress);
             string Result = SendRequest(Wallet.ToString(), Method.ToString());
-            RequestResult Output = Serialization.DeserializeObjectFromJson<RequestResult>(Result);
+            RequestResult Output = JsonSerialization.DeserializeObjectFromJson<RequestResult>(Result);
             if (Output.error != null) return (Success: false, Error: Output.error.message, TransactionHash: null);
             else return (Success: true, Error: null, TransactionHash: Output.result.transactionHash);
         }
@@ -272,7 +272,7 @@ namespace Canti.Blockchain.RPC
             Method.AddParam("threshold", Threshold);
             if (Addresses != null) Method.AddParam("addresses", Addresses);
             string Result = SendRequest(Wallet.ToString(), Method.ToString());
-            RequestResult Output = Serialization.DeserializeObjectFromJson<RequestResult>(Result);
+            RequestResult Output = JsonSerialization.DeserializeObjectFromJson<RequestResult>(Result);
             if (Output.error != null) return (Success: false, Error: Output.error.message, TotalOutputCount: 0, FusionReadyCount: 0);
             else return (Success: true, Error: null, TotalOutputCount: Output.result.totalOutputCount, FusionReadyCount: Output.result.fusionReadyCount);
         }

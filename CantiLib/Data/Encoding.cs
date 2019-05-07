@@ -17,8 +17,8 @@ namespace Canti.Data
         // Gets the byte size of an object
         public static int GetSizeOfObject(object Input)
         {
-            try { return System.Runtime.InteropServices.Marshal.SizeOf(Input); }
-            catch { return -1;  }
+            try { if (Input.GetType() != typeof(string)) return System.Runtime.InteropServices.Marshal.SizeOf(Input); else return (Input as string).Length * 2; }
+            catch (Exception e) { Console.WriteLine(e.Message); return -1;  }
         }
 
         // Gets the smallest integer type an integer will fit in
@@ -192,16 +192,52 @@ namespace Canti.Data
                 ulongPtr[ulongOffset] = value;
             }
         }
+
+        // Decodes a number froma P2PVarint
+        public static ulong UnpackP2PVarInt(byte[] data)
+        {
+            int size = data[0] & 0x03;
+            ulong value = 0;
+            switch (size)
+            {
+                case 0:
+                    value = Convert.ToUInt64(data[0]) >> 2;
+                    return value;
+                case 1:
+                    value = Convert.ToUInt64(data[0]);
+                    value |= Convert.ToUInt64(data[1]) << 8;
+                    value = value >> 2;
+                    return Convert.ToUInt64(value);
+                case 2:
+                    value = Convert.ToUInt64(data[0]);
+                    value |= Convert.ToUInt64(data[1]) << 8;
+                    value |= Convert.ToUInt64(data[2]) << 16;
+                    value |= Convert.ToUInt64(data[3]) << 24;
+                    value = value >> 2;
+                    return Convert.ToUInt64(value);
+                default:
+                    value = Convert.ToUInt64(data[0]);
+                    value |= Convert.ToUInt64(data[1]) << 8;
+                    value |= Convert.ToUInt64(data[2]) << 16;
+                    value |= Convert.ToUInt64(data[3]) << 24;
+                    value |= Convert.ToUInt64(data[4]) << 32;
+                    value |= Convert.ToUInt64(data[5]) << 40;
+                    value |= Convert.ToUInt64(data[6]) << 48;
+                    value |= Convert.ToUInt64(data[7]) << 56;
+                    value = value >> 2;
+                    return Convert.ToUInt64(value);
+            }
+        }
         #endregion
 
         #region Conversion
         // Converts a byte array to a hex string
         public static string ByteArrayToHexString(byte[] Input)
-        {
-            StringBuilder Hex = new StringBuilder(Input.Length * 2);
-            foreach (byte Byte in Input) Hex.AppendFormat("{0:x2}", Byte);
-            return Hex.ToString();
-        }
+                {
+                    StringBuilder Hex = new StringBuilder(Input.Length * 2);
+                    foreach (byte Byte in Input) Hex.AppendFormat("{0:x2}", Byte);
+                    return Hex.ToString();
+                }
 
         // Converts a hex string to a byte array
         public static byte[] HexStringToByteArray(String Input)

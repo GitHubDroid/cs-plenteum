@@ -66,17 +66,17 @@ namespace CLIWallet
                 /* Basic commands */
                 new AdvancedCommand("advanced", "List available advanced commands", true, false),
                 new AdvancedCommand("address", "Display your payment address", true, false),
-                new AdvancedCommand("balance", $"Display how much {Globals.ticker} you have", true, false),
+                new AdvancedCommand("balance", $"Display how much {Globals.TICKER} you have", true, false),
                 new AdvancedCommand("backup", "Print the relevant data needed to restore your wallet", true, false),
                 new AdvancedCommand("exit", "Exit and save your wallet", true, false),
                 new AdvancedCommand("help", "List this help message", true, false),
-                new AdvancedCommand("transfer", $"Send {Globals.ticker} to someone", false, false),
+                new AdvancedCommand("transfer", $"Send {Globals.TICKER} to someone", false, false),
                 
                 /* Advanced commands */
                 new AdvancedCommand("ab_add", "Add a person to your address book", true, true),
                 new AdvancedCommand("ab_delete", "Delete a person in your address book", true, true),
                 new AdvancedCommand("ab_list", "List everyone in your address book", true, true),
-                new AdvancedCommand("ab_send", $"Send {Globals.ticker} to someone in your address book", false, true),
+                new AdvancedCommand("ab_send", $"Send {Globals.TICKER} to someone in your address book", false, true),
                 new AdvancedCommand("change_password", "Change your wallet password", true, true),
                 new AdvancedCommand("make_integrated_address", "Make an integrated address from an address + payment ID", true, true),
                 new AdvancedCommand("incoming_transfers", "Show incoming transfers", true, true),
