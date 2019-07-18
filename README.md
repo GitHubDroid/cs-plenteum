@@ -1,4 +1,4 @@
-```
+﻿```
 The wind howled by me
 As I sat and watched the world;
 All but powerless
@@ -12,6 +12,12 @@ All but powerless
 ### Prerequisites
 
 You need the `dotnet` command line tools.
+
+This project targets Net Core version 3.0 (preview 5).
+
+*Optionally*, if you want to use TurtleCoin-Crypto as opposed to the native C# cryptography implementations, then you will also need to compile the turtlecoin-crypto-shared library from the link below and place the resulting file in the "Include" folder before compiling the solution.
+
+https://github.com/turtlecoin/turtlecoin-crypto/
 
 #### Windows
 
@@ -45,40 +51,11 @@ Yep, it's a special snowflake edition
 
 ### Running
 
-* Enter the `Daemon` directory
+* Enter the `CS-TurtleCoin` directory
 
 * Run `dotnet run`
 
 * This will launch the daemon.
-
-### Testing
-
-* Enter the `Tests` directory
-
-* Run `dotnet test`
-
-* This will run the test suite, and report any failures.
-
-### Benchmarking
-
-* Enter the `Benchmark` directory
-
-* Run `dotnet run --configuration Release`
-
-### Experimenting
-
-If you want to test out a few functions without having to set up a whole new
-project, we have provided the `TestZone` project for you to do this in.
-
-* Enter the `TestZone` directory
-
-* Run `dotnet run`
-
-* Change some code you want to experiment with
-
-* Run `dotnet run` again.
-
-* Happy Hacking!
 
 ### Exploring
 
@@ -87,7 +64,7 @@ The main code base is available in the `CantiLib` folder.
 ## License
 
 ```
-Copyright (c) 2018, The TurtleCoin Developers
+Copyright (c) 2018-2019 The TurtleCoin Developers
 
 Please see the included LICENSE file for more information.
 ```
@@ -97,16 +74,19 @@ Please see the included LICENSE file for more information.
 Thank you to all the awesome developers who have made their software open source!
 
 * The CryptoNote Developers, The ByteCoin Developers, The Monero Developers
+* Andrey N.Sabelnikov (For his Epee serialization which was ported)
+* The NewtonSoft Developers (For their excellent JSon library)
+* The Microsoft Developers (For the Microsoft.Data.Sqlite.Core package)
+* Eric Sink (For his bundle_green SQLite PCL package)
 * Diego Alejandro Gómez (For his C# version of Groestl)
 * Nabil S. Al Ramli (For his C version of OpenAES which we ported)
 * Dominik Reichl (For his C# version of Blake256)
-* Daniel J. Bernstein / djb (For his C version of ED25519, Ref10, which we ported)
 * Markku-Juhani O. Saarinen (For his C version of Keccak, which we ported)
 * Alberto Fajardo (For his C# version of Skein)
 * Pavel Kovalenko (For his tweaks to the C# version of Skein)
 * Hongjun Wu (For his C version of JH, which we ported)
-* Adrian Herridge (For his swift version of AES file encryption)
-* CodIsAFish (For his C# modification of Adrian Herridge's AES file encryption, which we modified)
 * Brian Gladman (For his C version of AESB which we ported)
+
+(Will add more as added)
 
 If we have used your software and incorrectly attributed you, or not attributed you, please let us know!

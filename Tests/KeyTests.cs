@@ -1,109 +1,52 @@
-//
-// Copyright (c) 2018 The TurtleCoin Developers
+﻿//
+// Copyright (c) 2019 Canti, The TurtleCoin Developers
 // 
 // Please see the included LICENSE file for more information.
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Canti.Cryptography;
+using Canti.Cryptography.Native.CryptoNight;
+using System;
 
-using Canti.Data;
-using Canti.Blockchain.Crypto;
-
-namespace Tests
+namespace CryptoTests
 {
-    [TestClass]
-    public class KeyTests
+    class KeyTests
     {
-        [TestMethod]
-        public void TestGenerateWalletKeys()
+        public static void RunTests(KeyPair Keys, ICryptography Crypto)
         {
-            WalletKeys keys = KeyOps.GenerateWalletKeys();
+            Console.WriteLine("Running key tests...");
 
-            /* All newly generated keys should be a deterministic pair */
-            Assert.IsTrue(KeyOps.AreKeysDeterministic(
-                keys.privateSpendKey, keys.privateViewKey
-            ));
+            Console.WriteLine();
 
-            var publicSpendKey = KeyOps.PrivateKeyToPublicKey(
-                keys.privateSpendKey
-            );
+            /*KeyPair Keys = Crypto.GenerateKeys();
+            Console.WriteLine($"Generated Private Key: {Keys.PrivateKey}");
+            Console.WriteLine($"Generated Public Key: {Keys.PublicKey}");
 
-            var publicViewKey = KeyOps.PrivateKeyToPublicKey(
-                keys.privateViewKey
-            );
+            bool Check_Key = Crypto.CheckKey(Keys.PublicKey);
+            Console.WriteLine($"Check Key: {Check_Key}");
 
-            /* We should derive the same public keys from the private keys
-               as the ones returned from GenerateWalletKeys() */
-            Assert.AreEqual<PublicKey>(publicSpendKey, keys.publicSpendKey);
-            Assert.AreEqual<PublicKey>(publicViewKey, keys.publicViewKey);
-        }
+            string KeyImage = Crypto.GenerateKeyImage(Keys.PublicKey, Keys.PrivateKey);
+            Console.WriteLine($"Key Image: {KeyImage}");
 
-        [TestMethod]
-        public void TestGenerateKeys()
-        {
-            KeyPair pair = KeyOps.GenerateKeys();
+            KeyPair ViewKeys = Crypto.GenerateViewKeysFromPrivateSpendKey(Keys.PrivateKey);
+            Console.WriteLine($"Generated Private View Key: {ViewKeys.PrivateKey}");
+            Console.WriteLine($"Generated Public View Key: {ViewKeys.PublicKey}");
 
-            PublicKey pub = KeyOps.PrivateKeyToPublicKey(pair.privateKey);
+            string PrivateViewKey = Crypto.GeneratePrivateViewKeyFromPrivateSpendKey(Keys.PrivateKey);
+            Console.WriteLine($"Generated Private View Key: {PrivateViewKey}");
 
-            /* The public key should be the same one as we get get from
-               manual derivation of the private key */
-            Assert.AreEqual<PublicKey>(pair.publicKey, pub);
-        }
+            string Signature = Crypto.GenerateSignature(Keys.PublicKey, Keys.PublicKey, Keys.PrivateKey);
+            Console.WriteLine($"Generated Signature: {Signature}");
 
-        [TestMethod]
-        public void TestGenerateDeterministicKeys()
-        {
-            PrivateKey p = new PrivateKey("677e019be0351443ea8904a6d6786056f7390eb74ba05ec327bccf2d318ca809");
+            bool Check_Signature = Crypto.CheckSignature(Keys.PublicKey, Keys.PublicKey, Signature);
+            Console.WriteLine($"Check Signature: {Check_Signature}");
 
-            PublicKey pubViewKey = new PublicKey("09e9c339bd1d751bf88d4d2301daa75576297e2e6b1a133cc0b9f03355421f69");
+            string Reduced = Crypto.ScReduce32(SEED1);
+            Console.WriteLine($"Sc Reduce 32: {Reduced}");
 
-            PrivateKey privViewKey = new PrivateKey("508ba238625600b2ddec49eef1f114002c76c1436d4a144c3588069c3f72ae02");
+            string Scalar = Crypto.HashToScalar(SEED1);
+            Console.WriteLine($"Hash To Scalar: {Scalar}");*/
 
-            /* Generate view keys from a private spend key seed */
-            KeyPair pair = KeyOps.GenerateDeterministicKeys(p);
-
-            Assert.AreEqual<PublicKey>(pubViewKey, pair.publicKey);
-            Assert.AreEqual<PrivateKey>(privViewKey, pair.privateKey);
-        }
-
-        [TestMethod]
-        public void TestAreKeysDeterministic()
-        {
-            /* A private spend key and private view key derived pair */
-            PrivateKey a1 = new PrivateKey("a235851985a974aeafa6db9ed4bd8cd523d3f43048bb69df5dff4dfcc445b107");
-
-            PrivateKey a2 = new PrivateKey("b7636ec1e84039dbb6d93ddbcf0f8e39e418ce13516fa1d8c40717f81e8d370e");
-
-            /* a2 is derived from a1 */
-            Assert.IsTrue(KeyOps.AreKeysDeterministic(a1, a2));
-
-            /* Derivation is only one way */
-            Assert.IsFalse(KeyOps.AreKeysDeterministic(a2, a1));
-
-            /* Two completely unrelated keys */
-            PrivateKey b1 = new PrivateKey("ee87e28220156cde3b901beb74bd089bdb512a3f6cef39fca66f900d4009fb08");
-
-            PrivateKey b2 = new PrivateKey("677e019be0351443ea8904a6d6786056f7390eb74ba05ec327bccf2d318ca809");
-
-            Assert.IsFalse(KeyOps.AreKeysDeterministic(b1, b2));
-            Assert.IsFalse(KeyOps.AreKeysDeterministic(b2, b1));
-        }
-
-        [TestMethod]
-        public void TestPrivateKeyToPublicKey()
-        {
-            /* A private key and public key pair */
-            PrivateKey a1 = new PrivateKey("3a8441fa686f3d0c01b60264a79153c41fdd925ae4a31ffab215648f00758101");
-
-            PublicKey a2 = new PublicKey("8464c6ff818fb7f502e4533c23f6ddb615b3568dbbfe954d07f8dd8fd23aefb3");
-
-            Assert.AreEqual<PublicKey>(a2, KeyOps.PrivateKeyToPublicKey(a1));
-
-            /* Two completely unrelated keys */
-            PrivateKey b1 = new PrivateKey("a8219da64ddb1974292a19b6f2a3d3ef411a592191590d21ac59961c8af0c50e");
-
-            PublicKey b2 = new PublicKey("45266e9d6259817e6c38cdd7f774fc38c9596d7400b1728546cf111e342941a5");
-    
-            Assert.AreNotEqual<PublicKey>(b2, KeyOps.PrivateKeyToPublicKey(b1));
+            Console.WriteLine();
         }
     }
 }
