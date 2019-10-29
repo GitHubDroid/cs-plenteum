@@ -75,14 +75,29 @@ namespace Canti.Cryptography.Native.CryptoNight
 
             byte[] text = cnState.GetText();
 
-            /* Fill the scratchpad with AES encryption of text */
-            for (int i = 0; i < cnParams.InitRounds; i++)
+            if (cnParams.Intrinsics && Aes.IsSupported && Sse2.IsSupported)
             {
-                AES.AESPseudoRound(expandedKeys, text, cnParams.Intrinsics);
+                /* Fill the scratchpad with AES encryption of text */
+                for (int i = 0; i < cnParams.InitRounds; i++)
+                {
+                    AES.AESPseudoRoundNative(expandedKeys, text);
 
-                /* Write text to the scratchpad, at the offset
-                   i * InitSizeByte */
-                Buffer.BlockCopy(text, 0, scratchpad, i * Constants.INIT_SIZE_BYTE, text.Length);
+                    /* Write text to the scratchpad, at the offset
+                       i * InitSizeByte */
+                    Buffer.BlockCopy(text, 0, scratchpad, i * Constants.INIT_SIZE_BYTE, text.Length);
+                }
+            }
+            else
+            {
+                /* Fill the scratchpad with AES encryption of text */
+                for (int i = 0; i < cnParams.InitRounds; i++)
+                {
+                    AES.AESPseudoRound(expandedKeys, text, cnParams.Intrinsics);
+
+                    /* Write text to the scratchpad, at the offset
+                       i * InitSizeByte */
+                    Buffer.BlockCopy(text, 0, scratchpad, i * Constants.INIT_SIZE_BYTE, text.Length);
+                }
             }
 
             return scratchpad;
@@ -166,10 +181,10 @@ namespace Canti.Cryptography.Native.CryptoNight
 
         public static unsafe void InitMixingState(ulong *a, ulong *b, ulong *k)
         {
-            a[0] = (k + 0)[0] ^ (k + 4)[0];
-            a[1] = (k + 0)[1] ^ (k + 4)[1];
-            b[0] = (k + 2)[0] ^ (k + 6)[0];
-            b[1] = (k + 2)[1] ^ (k + 6)[1];
+            a[0] = k[0] ^ k[4];
+            a[1] = k[1] ^ k[5];
+            b[0] = k[2] ^ k[6];
+            b[1] = k[3] ^ k[7];
         }
 
         public static int StateIndex(ulong j, int modulus)
