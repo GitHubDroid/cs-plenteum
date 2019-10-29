@@ -176,19 +176,6 @@ namespace Canti.Cryptography.Native
         {
             return _Keccak(input, 200);
         }
-        public static byte[] keccak1600(byte[] input, byte[] state)
-        {
-            byte[] output = _keccak(input, 200);
-            Array.Copy(output, output.Length - state.Length, state, 0, state.Length);
-            return state;
-        }
-        public static byte[] keccak1600(byte[] input, int state)
-        {
-            byte[] output = _keccak(input, 200);
-            byte[] o = new byte[state];
-            Array.Copy(output, output.Length - state, o, 0, state);
-            return o;
-        }
 
         /* Hashes the given input with keccak, into an output hash of 32 bytes.
            Copies outputLength bytes of the output and returns it. Output
