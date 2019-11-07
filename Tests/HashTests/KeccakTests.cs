@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-using Canti.Cryptography.Native;
+using Plenteum.Cryptography.Native;
 
 /* Useful for testing: https://asecuritysite.com/encryption/sha3 (256 bit) */
 namespace Tests

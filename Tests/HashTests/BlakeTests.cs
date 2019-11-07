@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-using static Canti.Utils;
-using Canti.Cryptography.Native;
+using static Plenteum.Utils;
+using Plenteum.Cryptography.Native;
 
 /* Helpful for testing: https://asecuritysite.com/encryption/blake */
 namespace Tests

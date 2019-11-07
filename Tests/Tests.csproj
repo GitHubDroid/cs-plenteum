@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.0</TargetFramework>
@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CantiLib\CantiLib.csproj" />
+    <ProjectReference Include="..\PlenteumCore\PlenteumCore.csproj" />
   </ItemGroup>
 
 </Project>

@@ -2,8 +2,8 @@ using System;
 using System.Runtime.Intrinsics.X86;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-using static Canti.Utils;
-using Canti.Cryptography.Native;
+using static Plenteum.Utils;
+using Plenteum.Cryptography.Native;
 
 namespace Tests
 {

@@ -4,9 +4,9 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Runtime.Intrinsics;
 using System.Runtime.Intrinsics.X86;
 
-using static Canti.Utils;
-using Canti.Cryptography.Native;
-using Canti.Cryptography.Native.CryptoNight;
+using static Plenteum.Utils;
+using Plenteum.Cryptography.Native;
+using Plenteum.Cryptography.Native.CryptoNight;
 
 /* https://cryptonote.org/cns/cns008.txt */
 namespace Tests

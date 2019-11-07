@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-using Canti.Cryptography.Native;
+using Plenteum.Cryptography.Native;
 
 /* https://en.wikipedia.org/wiki/Skein_(hash_function)#Examples_of_Skein_hashes */
 /* Useful for testing: https://asecuritysite.com/encryption/sk */
